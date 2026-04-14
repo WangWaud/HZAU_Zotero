@@ -41,7 +41,7 @@
 
   <macro name="sort-language">
     <choose>
-      <if variable="language">
+      <if locale="en">
         <text value="1"/>
       </if>
       <else>
@@ -512,18 +512,16 @@
       <key macro="issued-sort" sort="ascending"/>
       <key variable="title"/>
     </sort>
+    <layout locale="en" prefix="（" suffix="）" delimiter="，">
+      <group delimiter=" ">
+        <text macro="author-cite-en"/>
+        <text macro="citation-year-locator-en"/>
+      </group>
+    </layout>
     <layout prefix="（" suffix="）" delimiter="，">
       <group delimiter=" ">
-        <choose>
-          <if variable="language">
-            <text macro="author-cite-en"/>
-            <text macro="citation-year-locator-en"/>
-          </if>
-          <else>
-            <text macro="author-cite-zh"/>
-            <text macro="citation-year-locator-zh"/>
-          </else>
-        </choose>
+        <text macro="author-cite-zh"/>
+        <text macro="citation-year-locator-zh"/>
       </group>
     </layout>
   </citation>
@@ -536,168 +534,167 @@
       <key variable="title"/>
     </sort>
 
+    <layout locale="en" suffix=".">
+      <choose>
+        <if type="article-journal article-magazine article-newspaper" match="any">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text macro="journal-title-en"/>
+            <text macro="journal-detail-en"/>
+          </group>
+        </if>
+
+        <else-if type="book">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" font-style="italic"/>
+            <choose>
+              <if variable="edition">
+                <text macro="edition-en" prefix=". "/>
+              </if>
+            </choose>
+            <choose>
+              <if variable="translator">
+                <text macro="translator-bib-en" prefix=". "/>
+              </if>
+            </choose>
+            <text macro="place-publisher-year-en" prefix=". "/>
+            <choose>
+              <if variable="page">
+                <text variable="page" prefix=". "/>
+              </if>
+            </choose>
+          </group>
+        </else-if>
+
+        <else-if type="chapter">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text value="In: "/>
+            <text macro="editor-bib-en"/>
+            <text variable="container-title" prefix=", " suffix=". "/>
+            <choose>
+              <if variable="event-title">
+                <text macro="event-block-en" suffix=". "/>
+              </if>
+            </choose>
+            <text macro="place-publisher-year-en"/>
+            <choose>
+              <if variable="page">
+                <text variable="page" prefix=". "/>
+              </if>
+            </choose>
+          </group>
+        </else-if>
+
+        <else-if type="paper-conference">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <choose>
+              <if variable="genre">
+                <text variable="genre" suffix=", "/>
+              </if>
+            </choose>
+            <text macro="event-block-en"/>
+          </group>
+        </else-if>
+
+        <else-if type="thesis">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text macro="thesis-label-en" suffix=". "/>
+            <text macro="place-publisher-year-en"/>
+          </group>
+        </else-if>
+
+        <else-if type="patent">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text macro="patent-source-en"/>
+            <text variable="number" prefix=", "/>
+            <text macro="full-date" prefix=". "/>
+          </group>
+        </else-if>
+
+        <else-if type="report bill legislation" match="any">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <choose>
+              <if variable="number">
+                <text variable="number" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text macro="place-publisher-year-en"/>
+          </group>
+        </else-if>
+
+        <else-if type="webpage post-weblog" match="any">
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title" suffix=". "/>
+            <text macro="full-date" suffix=". "/>
+            <text variable="URL"/>
+          </group>
+        </else-if>
+
+        <else>
+          <group>
+            <choose>
+              <if variable="author">
+                <text macro="author-bib-en" suffix=". "/>
+              </if>
+            </choose>
+            <text variable="title"/>
+            <choose>
+              <if variable="publisher publisher-place issued" match="any">
+                <text macro="place-publisher-year-en" prefix=". "/>
+              </if>
+            </choose>
+          </group>
+        </else>
+      </choose>
+    </layout>
+
     <layout suffix="．">
       <choose>
-        <if variable="language">
-          <choose>
-            <if type="article-journal article-magazine article-newspaper" match="any">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text macro="journal-title-en"/>
-                <text macro="journal-detail-en"/>
-              </group>
-            </if>
-
-            <else-if type="book">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" font-style="italic"/>
-                <choose>
-                  <if variable="edition">
-                    <text macro="edition-en" prefix=". "/>
-                  </if>
-                </choose>
-                <choose>
-                  <if variable="translator">
-                    <text macro="translator-bib-en" prefix=". "/>
-                  </if>
-                </choose>
-                <text macro="place-publisher-year-en" prefix=". "/>
-                <choose>
-                  <if variable="page">
-                    <text variable="page" prefix=". "/>
-                  </if>
-                </choose>
-              </group>
-            </else-if>
-
-            <else-if type="chapter">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text value="In: "/>
-                <text macro="editor-bib-en"/>
-                <text variable="container-title" prefix=", " suffix=". "/>
-                <choose>
-                  <if variable="event-title">
-                    <text macro="event-block-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text macro="place-publisher-year-en"/>
-                <choose>
-                  <if variable="page">
-                    <text variable="page" prefix=". "/>
-                  </if>
-                </choose>
-              </group>
-            </else-if>
-
-            <else-if type="paper-conference">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <choose>
-                  <if variable="genre">
-                    <text variable="genre" suffix=", "/>
-                  </if>
-                </choose>
-                <text macro="event-block-en"/>
-              </group>
-            </else-if>
-
-            <else-if type="thesis">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text macro="thesis-label-en" suffix=". "/>
-                <text macro="place-publisher-year-en"/>
-              </group>
-            </else-if>
-
-            <else-if type="patent">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text macro="patent-source-en"/>
-                <text variable="number" prefix=", "/>
-                <text macro="full-date" prefix=". "/>
-              </group>
-            </else-if>
-
-            <else-if type="report bill legislation" match="any">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <choose>
-                  <if variable="number">
-                    <text variable="number" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text macro="place-publisher-year-en"/>
-              </group>
-            </else-if>
-
-            <else-if type="webpage post-weblog" match="any">
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title" suffix=". "/>
-                <text macro="full-date" suffix=". "/>
-                <text variable="URL"/>
-              </group>
-            </else-if>
-
-            <else>
-              <group>
-                <choose>
-                  <if variable="author">
-                    <text macro="author-bib-en" suffix=". "/>
-                  </if>
-                </choose>
-                <text variable="title"/>
-                <choose>
-                  <if variable="publisher publisher-place issued" match="any">
-                    <text macro="place-publisher-year-en" prefix=". "/>
-                  </if>
-                </choose>
-              </group>
-            </else>
-          </choose>
-        </if>
-        <else>
-          <choose>
         <if type="article-journal article-magazine article-newspaper" match="any">
           <group>
             <choose>
@@ -858,8 +855,6 @@
                 </choose>
               </group>
             </else>
-          </choose>
-        </else>
       </choose>
     </layout>
 
